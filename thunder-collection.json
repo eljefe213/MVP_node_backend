@@ -1,0 +1,226 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "Volunteer Mission API",
+    "dateExported": "2024-03-14",
+    "version": "1.1",
+    "folders": [
+      {
+        "name": "Auth",
+        "requests": [
+          {
+            "name": "Register User",
+            "url": "http://localhost:3000/api/auth/register",
+            "method": "POST",
+            "body": {
+              "username": "testuser",
+              "email": "test@example.com",
+              "password": "password123",
+              "skills": "JavaScript, Node.js",
+              "availability": "Weekends"
+            }
+          },
+          {
+            "name": "Login User",
+            "url": "http://localhost:3000/api/auth/login",
+            "method": "POST",
+            "body": {
+              "email": "test@example.com",
+              "password": "password123"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Missions",
+        "requests": [
+          {
+            "name": "Create Mission",
+            "url": "http://localhost:3000/api/missions",
+            "method": "POST",
+            "headers": {
+              "Authorization": "Bearer {{authToken}}"
+            },
+            "body": {
+              "title": "Community Garden Project",
+              "description": "Help maintain local community garden",
+              "location": "Central Park",
+              "start_date": "2024-04-01T09:00:00Z",
+              "end_date": "2024-04-01T17:00:00Z"
+            }
+          },
+          {
+            "name": "Get All Missions",
+            "url": "http://localhost:3000/api/missions",
+            "method": "GET"
+          },
+          {
+            "name": "Get Mission by ID",
+            "url": "http://localhost:3000/api/missions/1",
+            "method": "GET"
+          },
+          {
+            "name": "Update Mission Status",
+            "url": "http://localhost:3000/api/missions/1",
+            "method": "PUT",
+            "headers": {
+              "Authorization": "Bearer {{authToken}}"
+            },
+            "body": {
+              "status": "published"
+            }
+          },
+          {
+            "name": "Delete Mission",
+            "url": "http://localhost:3000/api/missions/1",
+            "method": "DELETE",
+            "headers": {
+              "Authorization": "Bearer {{authToken}}"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Inscriptions",
+        "requests": [
+          {
+            "name": "Create Inscription",
+            "url": "http://localhost:3000/api/inscriptions/1",
+            "method": "POST",
+            "headers": {
+              "Authorization": "Bearer {{authToken}}"
+            },
+            "body": {
+              "hours": 8
+            }
+          },
+          {
+            "name": "Get Mission Inscriptions",
+            "url": "http://localhost:3000/api/inscriptions/mission/1",
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer {{authToken}}"
+            }
+          },
+          {
+            "name": "Get User Inscriptions",
+            "url": "http://localhost:3000/api/inscriptions/user",
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer {{authToken}}"
+            }
+          },
+          {
+            "name": "Update Inscription Status",
+            "url": "http://localhost:3000/api/inscriptions/1",
+            "method": "PUT",
+            "headers": {
+              "Authorization": "Bearer {{authToken}}"
+            },
+            "body": {
+              "status": "accepted"
+            }
+          },
+          {
+            "name": "Cancel Inscription",
+            "url": "http://localhost:3000/api/inscriptions/1",
+            "method": "DELETE",
+            "headers": {
+              "Authorization": "Bearer {{authToken}}"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Comments",
+        "requests": [
+          {
+            "name": "Create Comment",
+            "url": "http://localhost:3000/api/comments/1",
+            "method": "POST",
+            "headers": {
+              "Authorization": "Bearer {{authToken}}"
+            },
+            "body": {
+              "content": "This is a great mission!"
+            }
+          },
+          {
+            "name": "Get Mission Comments",
+            "url": "http://localhost:3000/api/comments/mission/1",
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer {{authToken}}"
+            }
+          },
+          {
+            "name": "Update Comment",
+            "url": "http://localhost:3000/api/comments/1",
+            "method": "PUT",
+            "headers": {
+              "Authorization": "Bearer {{authToken}}"
+            },
+            "body": {
+              "content": "Updated comment content"
+            }
+          },
+          {
+            "name": "Delete Comment",
+            "url": "http://localhost:3000/api/comments/1",
+            "method": "DELETE",
+            "headers": {
+              "Authorization": "Bearer {{authToken}}"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Events",
+        "requests": [
+          {
+            "name": "Create Event",
+            "url": "http://localhost:3000/api/events/1",
+            "method": "POST",
+            "headers": {
+              "Authorization": "Bearer {{authToken}}"
+            },
+            "body": {
+              "title": "Planning Meeting",
+              "description": "Initial planning meeting for volunteers",
+              "start_date": "2024-04-01T10:00:00Z",
+              "end_date": "2024-04-01T11:00:00Z"
+            }
+          },
+          {
+            "name": "Get Mission Events",
+            "url": "http://localhost:3000/api/events/mission/1",
+            "method": "GET",
+            "headers": {
+              "Authorization": "Bearer {{authToken}}"
+            }
+          },
+          {
+            "name": "Update Event",
+            "url": "http://localhost:3000/api/events/1",
+            "method": "PUT",
+            "headers": {
+              "Authorization": "Bearer {{authToken}}"
+            },
+            "body": {
+              "title": "Updated Planning Meeting",
+              "description": "Updated meeting description",
+              "start_date": "2024-04-01T11:00:00Z",
+              "end_date": "2024-04-01T12:00:00Z"
+            }
+          },
+          {
+            "name": "Delete Event",
+            "url": "http://localhost:3000/api/events/1",
+            "method": "DELETE",
+            "headers": {
+              "Authorization": "Bearer {{authToken}}"
+            }
+          }
+        ]
+      }
+    ]
+  }
