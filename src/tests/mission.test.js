@@ -2,9 +2,12 @@ import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
 import request from 'supertest';
 import app from '../app.js';
 import { setupTestDatabase, clearTestDatabase } from './setup.js';
+import { Mission } from '../models/index.js';
+import jwt from 'jsonwebtoken';
 
 describe('Mission Endpoints', () => {
   let authToken;
+  let userId;
   let missionId;
 
   beforeAll(async () => {
@@ -19,7 +22,7 @@ describe('Mission Endpoints', () => {
       availability: 'Always'
     };
 
-    await request(app)
+    const registerRes = await request(app)
       .post('/api/auth/register')
       .send(user);
 
@@ -31,6 +34,9 @@ describe('Mission Endpoints', () => {
       });
 
     authToken = loginRes.body.token;
+    // Decode token to get userId
+    const decoded = jwt.verify(authToken, process.env.JWT_SECRET || 'your-secret-key');
+    userId = decoded.id;
   });
 
   afterAll(async () => {
@@ -73,8 +79,14 @@ describe('Mission Endpoints', () => {
   });
 
   it('should update mission status', async () => {
+    const mission = await Mission.create({
+      ...testMission,
+      userId: userId,
+      status: 'draft'
+    });
+
     const res = await request(app)
-      .put(`/api/missions/${missionId}`)
+      .put(`/api/missions/${mission.id}`)
       .set('Authorization', `Bearer ${authToken}`)
       .send({ status: 'published' });
 
@@ -83,8 +95,14 @@ describe('Mission Endpoints', () => {
   });
 
   it('should delete mission', async () => {
+    const mission = await Mission.create({
+      ...testMission,
+      userId: userId,
+      status: 'draft'
+    });
+
     const res = await request(app)
-      .delete(`/api/missions/${missionId}`)
+      .delete(`/api/missions/${mission.id}`)
       .set('Authorization', `Bearer ${authToken}`);
 
     expect(res.status).toBe(204);
