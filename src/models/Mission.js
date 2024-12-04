@@ -26,6 +26,10 @@ const Mission = sequelize.define('Mission', {
   status: {
     type: DataTypes.ENUM('draft', 'published', 'inProgress', 'completed', 'cancelled', 'archived'),
     defaultValue: 'draft'
+  },
+  userId: {
+    type: DataTypes.INTEGER,
+    allowNull: false
   }
 });
 

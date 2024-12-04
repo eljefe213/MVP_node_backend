@@ -16,6 +16,7 @@ export const createMission = async (req, res) => {
 
     res.status(201).json(mission);
   } catch (error) {
+    console.error('Error creating mission:', error);
     res.status(500).json({ message: 'Error creating mission', error: error.message });
   }
 };
@@ -25,6 +26,7 @@ export const getAllMissions = async (req, res) => {
     const missions = await Mission.findAll();
     res.json(missions);
   } catch (error) {
+    console.error('Error fetching missions:', error);
     res.status(500).json({ message: 'Error fetching missions', error: error.message });
   }
 };
@@ -37,6 +39,7 @@ export const getMissionById = async (req, res) => {
     }
     res.json(mission);
   } catch (error) {
+    console.error('Error fetching mission:', error);
     res.status(500).json({ message: 'Error fetching mission', error: error.message });
   }
 };
@@ -56,7 +59,6 @@ export const updateMissionStatus = async (req, res) => {
       return res.status(404).json({ message: 'Mission not found' });
     }
 
-    // Check if the user is the owner of the mission
     if (mission.userId !== req.user.id) {
       return res.status(403).json({ message: 'Not authorized' });
     }
@@ -64,6 +66,7 @@ export const updateMissionStatus = async (req, res) => {
     await mission.update({ status });
     res.json(mission);
   } catch (error) {
+    console.error('Error updating mission:', error);
     res.status(500).json({ message: 'Error updating mission', error: error.message });
   }
 };
@@ -75,7 +78,6 @@ export const deleteMission = async (req, res) => {
       return res.status(404).json({ message: 'Mission not found' });
     }
 
-    // Check if the user is the owner of the mission
     if (mission.userId !== req.user.id) {
       return res.status(403).json({ message: 'Not authorized' });
     }
@@ -83,6 +85,7 @@ export const deleteMission = async (req, res) => {
     await mission.destroy();
     res.status(204).send();
   } catch (error) {
+    console.error('Error deleting mission:', error);
     res.status(500).json({ message: 'Error deleting mission', error: error.message });
   }
 };

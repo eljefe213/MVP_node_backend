@@ -1,7 +1,8 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { validationResult } from 'express-validator';
-import User from '../models/User.js';
+import { User } from '../models/index.js';
+import { config } from '../config/index.js';
 
 export const register = async (req, res) => {
   try {
@@ -25,9 +26,10 @@ export const register = async (req, res) => {
       availability
     });
 
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET || 'your-secret-key');
+    const token = jwt.sign({ id: user.id }, config.jwtSecret);
     res.status(201).json({ token });
   } catch (error) {
+    console.error('Error in register:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
@@ -42,13 +44,19 @@ export const login = async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ where: { email } });
 
-    if (!user || !(await bcrypt.compare(password, user.password))) {
+    if (!user) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET || 'your-secret-key');
+    const isValidPassword = await bcrypt.compare(password, user.password);
+    if (!isValidPassword) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    const token = jwt.sign({ id: user.id }, config.jwtSecret);
     res.json({ token });
   } catch (error) {
+    console.error('Error in login:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
