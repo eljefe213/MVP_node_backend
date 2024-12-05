@@ -6,6 +6,7 @@ import swaggerUi from 'swagger-ui-express';
 import { specs } from './docs/swagger.js';
 import { errorHandler } from './middleware/error.middleware.js';
 import { notFoundHandler } from './middleware/notFound.middleware.js';
+import { authLimiter, apiLimiter } from './middleware/rateLimit.middleware.js';
 import authRoutes from './routes/auth.routes.js';
 import userRoutes from './routes/user.routes.js';
 import missionRoutes from './routes/mission.routes.js';
@@ -15,14 +16,18 @@ import eventRoutes from './routes/event.routes.js';
 
 const app = express();
 
-// Security and utility middleware
+// Security middleware
 app.use(helmet());
 app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Swagger documentation
+// Rate limiting
+app.use('/api/auth', authLimiter);
+app.use('/api', apiLimiter);
+
+// API Documentation
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 // Routes

@@ -11,22 +11,40 @@ const User = sequelize.define('User', {
   username: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true
+    validate: {
+      notEmpty: true,
+      len: [3, 50]
+    }
   },
   email: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true
+    unique: true,
+    validate: {
+      isEmail: true
+    }
   },
   password: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
+    validate: {
+      len: {
+        args: [8, 100],
+        msg: 'Password must be between 8 and 100 characters long'
+      },
+      is: {
+        args: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+        msg: 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&)'
+      }
+    }
   },
   skills: {
-    type: DataTypes.TEXT
+    type: DataTypes.STRING,
+    allowNull: true
   },
   availability: {
-    type: DataTypes.TEXT
+    type: DataTypes.STRING,
+    allowNull: true
   },
   role: {
     type: DataTypes.ENUM('volunteer', 'admin', 'superadmin'),
@@ -35,7 +53,16 @@ const User = sequelize.define('User', {
 }, {
   hooks: {
     beforeCreate: async (user) => {
-      user.password = await bcrypt.hash(user.password, 10);
+      if (user.changed('password')) {
+        const salt = await bcrypt.genSalt(12);
+        user.password = await bcrypt.hash(user.password, salt);
+      }
+    },
+    beforeUpdate: async (user) => {
+      if (user.changed('password')) {
+        const salt = await bcrypt.genSalt(12);
+        user.password = await bcrypt.hash(user.password, salt);
+      }
     }
   }
 });
