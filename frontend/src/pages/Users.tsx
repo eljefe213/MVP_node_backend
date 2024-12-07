@@ -9,7 +9,7 @@ const Users = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterRole, setFilterRole] = useState('all');
 
-  const { data: users, isLoading, error } = useQuery({
+  const { data: users = [], isLoading, error } = useQuery({
     queryKey: ['users'],
     queryFn: getUsers
   });
@@ -42,12 +42,9 @@ const Users = () => {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           placeholder="Rechercher un utilisateur..."
-          label="Rechercher"
+          label="Rechercher un utilisateur"
         />
         <div className="sm:w-48">
-          <label htmlFor="role-filter" className="sr-only">
-            Filtrer par rôle
-          </label>
           <select
             id="role-filter"
             value={filterRole}
@@ -57,7 +54,8 @@ const Users = () => {
           >
             <option value="all">Tous les rôles</option>
             <option value="volunteer">Bénévole</option>
-            <option value="admin">Admin</option>
+            <option value="admin">Administrateur</option>
+            <option value="superadmin">Super Admin</option>
           </select>
         </div>
       </div>

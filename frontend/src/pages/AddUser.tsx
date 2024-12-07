@@ -10,7 +10,7 @@ interface AddUserForm {
   password: string;
   skills: string;
   availability: string;
-  role: 'volunteer' | 'admin';
+  role: 'volunteer' | 'admin' | 'superadmin';
 }
 
 const AddUser = () => {
@@ -87,9 +87,11 @@ const AddUser = () => {
           <select
             {...register('role', { required: 'Role is required' })}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            aria-label="Sélectionner un rôle"
           >
             <option value="volunteer">Bénévole</option>
             <option value="admin">Administrateur</option>
+            <option value="superadmin">Super Admin</option>
           </select>
           {errors.role && <p className="text-red-500 text-sm">{errors.role.message}</p>}
         </div>

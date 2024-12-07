@@ -1,5 +1,21 @@
 import { User } from '../models/index.js';
 
+export const getAllUsers = async (req, res) => {
+  try {
+    // Only superadmin can access all users
+    if (req.user.role !== 'superadmin') {
+      return res.status(403).json({ message: 'Not authorized to view all users' });
+    }
+
+    const users = await User.findAll({
+      attributes: { exclude: ['password'] }
+    });
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching users', error: error.message });
+  }
+};
+
 export const getCurrentUser = async (req, res) => {
   try {
     const user = await User.findByPk(req.user.id, {

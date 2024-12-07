@@ -5,6 +5,8 @@ import Register from './pages/Register';
 import Users from './pages/Users';
 import AddUser from './pages/AddUser';
 import { useAuthStore } from './stores/authStore';
+import ProtectedRoute from './components/common/ProtectedRoute';
+import { ROLES } from './utils/roleUtils';
 
 function App() {
   const { isAuthenticated } = useAuthStore();
@@ -18,10 +20,14 @@ function App() {
             <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to="/" />} />
             <Route path="/register" element={!isAuthenticated ? <Register /> : <Navigate to="/" />} />
             <Route path="/users" element={
-              isAuthenticated ? <Users /> : <Navigate to="/login" />
+              <ProtectedRoute requiredRole={ROLES.SUPERADMIN}>
+                <Users />
+              </ProtectedRoute>
             } />
             <Route path="/users/add" element={
-              isAuthenticated ? <AddUser /> : <Navigate to="/login" />
+              <ProtectedRoute requiredRole={ROLES.SUPERADMIN}>
+                <AddUser />
+              </ProtectedRoute>
             } />
             <Route path="/" element={
               isAuthenticated ? (

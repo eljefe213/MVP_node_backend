@@ -29,6 +29,28 @@ const router = express.Router();
 
 /**
  * @swagger
+ * /api/users:
+ *   get:
+ *     summary: Get all users
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of all users
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/User'
+ *       401:
+ *         description: Unauthorized
+ */
+router.get('/', authenticate, userController.getAllUsers);
+
+/**
+ * @swagger
  * /api/users/me:
  *   get:
  *     summary: Get current user profile

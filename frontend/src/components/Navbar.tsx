@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
+import { canManageUsers } from '../utils/roleUtils';
 
 const Navbar = () => {
-  const { isAuthenticated, logout } = useAuthStore();
+  const { isAuthenticated, logout, user } = useAuthStore();
 
   return (
     <nav className="bg-white shadow-lg">
@@ -13,7 +14,9 @@ const Navbar = () => {
           <div className="flex space-x-4">
             {isAuthenticated ? (
               <>
-                <Link to="/users" className="text-gray-700 hover:text-gray-900">Utilisateurs</Link>
+                {user && canManageUsers(user.role) && (
+                  <Link to="/users" className="text-gray-700 hover:text-gray-900">Utilisateurs</Link>
+                )}
                 <Link to="/events" className="text-gray-700 hover:text-gray-900">Événements</Link>
                 <Link to="/missions" className="text-gray-700 hover:text-gray-900">Missions</Link>
                 <button 

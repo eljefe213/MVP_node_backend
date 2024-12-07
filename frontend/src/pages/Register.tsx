@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, Link } from 'react-router-dom';
 import { register as registerApi } from '../services/api';
-import { ApiError } from '../types/api';
+import { AxiosError } from 'axios';
+import { ROLES } from '../utils/roleUtils';
 
 interface RegisterForm {
   username: string;
@@ -10,10 +11,15 @@ interface RegisterForm {
   password: string;
   skills: string;
   availability: string;
+  role: 'volunteer' | 'admin' | 'superadmin';
 }
 
 const Register = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm<RegisterForm>();
+  const { register, handleSubmit, formState: { errors } } = useForm<RegisterForm>({
+    defaultValues: {
+      role: 'volunteer'
+    }
+  });
   const navigate = useNavigate();
   const [error, setError] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -28,12 +34,13 @@ const Register = () => {
         navigate('/login');
       }
     } catch (error) {
-      const apiError = error as ApiError;
-      const errorMessage = apiError.response?.data?.message 
-        || apiError.response?.data?.errors?.[0]?.message
-        || 'Registration failed. Please try again.';
-      
-      setError(errorMessage);
+      if (error instanceof AxiosError) {
+        const errorMessage = error.response?.data?.message 
+          || error.response?.data?.errors?.[0]?.message
+          || 'Registration failed. Please try again.';
+        
+        setError(errorMessage);
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -83,6 +90,19 @@ const Register = () => {
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
             />
             {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Rôle :</label>
+            <select
+              {...register('role')}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              aria-label="Sélectionner un rôle"
+            >
+              <option value={ROLES.VOLUNTEER}>Bénévole</option>
+              <option value={ROLES.ADMIN}>Administrateur</option>
+              <option value={ROLES.SUPERADMIN}>Super Admin</option>
+            </select>
           </div>
 
           <div>

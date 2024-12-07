@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate, Link } from 'react-router-dom';
 import { login } from '../services/api';
 import { useAuthStore } from '../stores/authStore';
-import { ApiError } from '../types/api';
+import { AxiosError } from 'axios';
 
 interface LoginForm {
   email: string;
@@ -20,13 +20,14 @@ const Login = () => {
     try {
       setError('');
       const response = await login(data.email, data.password);
-      if (response.token) {
-        loginStore(response.token);
+      if (response.token && response.user) {
+        loginStore(response.token, response.user);
         navigate('/');
       }
     } catch (error) {
-      const apiError = error as ApiError;
-      setError(apiError.response?.data?.message || 'Login failed. Please try again.');
+      if (error instanceof AxiosError) {
+        setError(error.response?.data?.message || 'Login failed. Please try again.');
+      }
     }
   };
 
